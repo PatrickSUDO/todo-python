@@ -1,0 +1,36 @@
+.env
+.editorconfig
+.git
+.cache
+.vscode
+.DS_Store
+.bundle/
+
+# Python related files
+*.pyc
+.Python
+__pycache__/
+pip-selfcheck.json
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Pytests
+.cache/
+.pytest_cache/
+
+# Pipenv
+
+Pipfile
+Pipfile.lock
+
+# Ignore what needs to be ignored.
+*.ignore.*
+*.ignore
+*.ignore/*
+ignore/*
+
+# Ignore appsecrets
+conf.d/01-bare-metal.yaml
+conf.d/99-local-appsecrets.yml

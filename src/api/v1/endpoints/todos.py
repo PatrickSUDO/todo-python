@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
-from app.db.models import Todo as TodoModel
-from app.db.database import database
-from app.schemas.todos import Todo as TodoSchema
+from src.db.models import Todo as TodoModel
+from src.db.database import database
+from src.schemas.todos import Todo as TodoSchema
 from typing import List
 
 router = APIRouter()

@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.v1.endpoints import todos
+from src.api.v1.endpoints import todos
 
 router = APIRouter()
 

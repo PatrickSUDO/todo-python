@@ -1,7 +1,7 @@
 # This stage installs all the dependencies and builds the application
 FROM python:3.10-slim as builder
 
-WORKDIR /app
+WORKDIR /src
 
 # Install dependencies
 COPY requirements/requirements.txt .
@@ -16,8 +16,8 @@ COPY . .
 # This stage copies the application from the builder stage and runs it
 FROM python:3.10-slim as runner
 
-WORKDIR /app
+WORKDIR /src
 
-COPY --from=builder /app .
+COPY --from=builder /src .
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]

@@ -30,6 +30,8 @@ fastapi==0.100.0
     # via -r requirements/requirements.in
 flake8==6.0.0
     # via -r requirements/requirements.in
+greenlet==2.0.2
+    # via -r requirements/requirements.in
 h11==0.14.0
     # via uvicorn
 idna==3.4

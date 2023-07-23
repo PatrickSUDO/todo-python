@@ -17,7 +17,6 @@ pydantic~=2.0
 pytest~=7.4
 pytest-asyncio~=0.21
 
-
 # Linters and formatters
 black~=23.7
 flake8~=6.0

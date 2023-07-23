@@ -1,7 +1,10 @@
-# This stage installs all the dependencies and builds the application
-FROM python:3.10-slim as builder
+# Base stage
+FROM python:3.10-slim as base
 
 WORKDIR /src
+
+# Builder stage
+FROM base as builder
 
 # Install dependencies
 COPY requirements/requirements.txt .
@@ -10,12 +13,22 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 # Copy the rest of the application code
 COPY . .
 
-# Second stage: "runner" stage
-# This stage copies the application from the builder stage and runs it
-FROM python:3.10-slim as runner
+# Testing stage
+FROM builder as test
+
+# Install testing dependencies
+COPY requirements/requirements-test.txt .
+RUN pip install -r requirements-test.txt
+
+# Copy tests
+COPY tests /tests
+
+CMD ["pytest", "/tests"]
+
+# Runner stage
+FROM base as runner
 
 COPY --from=builder /usr/local /usr/local
-WORKDIR /src
 
 COPY --from=builder /src .
 

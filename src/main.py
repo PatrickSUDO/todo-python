@@ -1,6 +1,7 @@
 from fastapi import FastAPI
-from src.api.v1.api import router as api_v1_router
+
 from src.api.health_check import router as health_check_router
+from src.api.v1.api import router as api_v1_router
 from src.db.database import database
 
 app = FastAPI()

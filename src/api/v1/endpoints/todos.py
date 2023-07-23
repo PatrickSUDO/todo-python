@@ -1,8 +1,10 @@
-from fastapi import APIRouter, HTTPException
-from src.db.models import Todo as TodoModel
-from src.db.database import database
-from src.schemas.todos import Todo as TodoSchema
 from typing import List
+
+from fastapi import APIRouter, HTTPException
+
+from src.db.database import database
+from src.db.models import Todo as TodoModel
+from src.schemas.todos import Todo as TodoSchema
 
 router = APIRouter()
 
@@ -10,9 +12,7 @@ router = APIRouter()
 @router.post("/", response_model=TodoSchema)
 async def create_todo(todo: TodoSchema):
     query = TodoModel.__table__.insert().values(
-        task=todo.task,
-        completed=todo.completed,
-        deleted=todo.deleted
+        task=todo.task, completed=todo.completed, deleted=todo.deleted
     )
     last_record_id = await database.execute(query)
     return {**todo.dict(), "id": last_record_id}
@@ -38,11 +38,7 @@ async def update_todo(todo_id: int, todo: TodoSchema):
     query = (
         TodoModel.__table__.update()
         .where(TodoModel.id == todo_id)
-        .values(
-            task=todo.task,
-            completed=todo.completed,
-            deleted=todo.deleted
-        )
+        .values(task=todo.task, completed=todo.completed, deleted=todo.deleted)
         .returning(TodoModel.__table__)
     )
     return await database.fetch_one(query)

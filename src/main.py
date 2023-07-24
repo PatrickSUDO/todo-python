@@ -16,6 +16,6 @@ async def startup():
 async def shutdown():
     await database.disconnect()
 
-
-app.include_router(api_v1_router, prefix="/api/v1")
 app.include_router(health_check_router)
+app.include_router(api_v1_router, prefix="/v1")
+

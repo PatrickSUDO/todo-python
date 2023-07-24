@@ -24,38 +24,6 @@ services:
     depends_on:
       - db
 
-  mypy:
-    build:
-      context: .
-      target: test
-    command: ["mypy", "/src"]
-    volumes:
-      - .:/src
-
-  black:
-    build:
-      context: .
-      target: test
-    command: ["black", "/src"]
-    volumes:
-      - .:/src
-
-  flake8:
-    build:
-      context: .
-      target: test
-    command: ["flake8", "/src"]
-    volumes:
-      - .:/src
-
-  isort:
-    build:
-      context: .
-      target: test
-    command: ["isort", "/src"]
-    volumes:
-      - .:/src
-
   db:
     image: postgres:15.3
     restart: always
@@ -67,3 +35,4 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - 5432:5432
+

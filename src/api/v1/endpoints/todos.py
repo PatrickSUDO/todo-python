@@ -1,6 +1,5 @@
 from typing import List
-
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Response
 
 from src.db.database import database
 from src.db.models import Todo as TodoModel
@@ -9,13 +8,26 @@ from src.schemas.todos import Todo as TodoSchema
 router = APIRouter()
 
 
-@router.post("/", response_model=TodoSchema)
+@router.get("/completed", response_model=List[TodoSchema])
+async def read_completed_todos():
+    query = TodoModel.__table__.select().where(TodoModel.completed == True)
+    return await database.fetch_all(query)
+
+
+@router.get("/deleted", response_model=List[TodoSchema])
+async def read_deleted_todos():
+    query = TodoModel.__table__.select().where(TodoModel.deleted == True)
+    return await database.fetch_all(query)
+
+
+@router.post("/", response_model=TodoSchema, status_code=201)
 async def create_todo(todo: TodoSchema):
-    query = TodoModel.__table__.insert().values(
-        task=todo.task, completed=todo.completed, deleted=todo.deleted
+    query = (
+        TodoModel.__table__.insert()
+        .values(task=todo.task, completed=todo.completed, deleted=False)
+        .returning(TodoModel.__table__)
     )
-    last_record_id = await database.execute(query)
-    return {**todo.dict(), "id": last_record_id}
+    return await database.fetch_one(query)
 
 
 @router.get("/", response_model=List[TodoSchema])
@@ -44,7 +56,7 @@ async def update_todo(todo_id: int, todo: TodoSchema):
     return await database.fetch_one(query)
 
 
-@router.delete("/{todo_id}", response_model=TodoSchema)
+@router.delete("/{todo_id}", status_code=204)
 async def delete_todo(todo_id: int):
     query = (
         TodoModel.__table__.update()
@@ -52,4 +64,19 @@ async def delete_todo(todo_id: int):
         .values(deleted=True)
         .returning(TodoModel.__table__)
     )
-    return await database.fetch_one(query)
+    deleted_todo = await database.fetch_one(query)
+    if deleted_todo is None:
+        raise HTTPException(status_code=404, detail="Todo not found")
+    return Response(status_code=204)
+
+
+@router.get("/completed", response_model=List[TodoSchema])
+async def read_completed_todos():
+    query = TodoModel.__table__.select().where(TodoModel.completed == True)
+    return await database.fetch_all(query)
+
+
+@router.get("/deleted", response_model=List[TodoSchema])
+async def read_deleted_todos():
+    query = TodoModel.__table__.select().where(TodoModel.deleted == True)
+    return await database.fetch_all(query)
